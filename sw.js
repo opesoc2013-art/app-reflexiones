@@ -1,13 +1,13 @@
 // Service worker: permite instalar la app y abrirla sin conexión.
 // Subí el número de versión cada vez que cambies algún archivo.
-const CACHE = "reflexiones-v2";
+const CACHE = "reflexiones-v3";
 const ARCHIVOS = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png",
-  "./icons/apple-touch-icon.png"
+  "./icon-192.png",
+  "./icon-512.png",
+  "./apple-touch-icon.png"
 ];
 
 self.addEventListener("install", (e) => {

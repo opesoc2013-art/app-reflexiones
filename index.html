@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reflexiones Diarias</title>
+  <meta name="description" content="Generador de reflexiones diarias inspiradoras." />
+  <meta name="theme-color" content="#0b1215" />
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Fraunces"', 'Georgia', 'serif'],
+            sans: ['"Inter"', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Tipografías -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=Great+Vibes&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      background:
+        radial-gradient(60rem 40rem at 10% -10%, rgba(20, 184, 166, 0.14), transparent 60%),
+        radial-gradient(50rem 35rem at 110% 110%, rgba(16, 185, 129, 0.10), transparent 60%),
+        #0b1215;
+    }
+    .fade-out { opacity: 0; transform: translateY(8px); filter: blur(4px); }
+    .fade-in  { opacity: 1; transform: translateY(0);   filter: blur(0); }
+    .quote-anim { transition: opacity .35s ease, transform .35s ease, filter .35s ease; }
+    .glow:hover { box-shadow: 0 0 0 1px rgba(45,212,191,.4), 0 10px 40px -10px rgba(45,212,191,.55); }
+    .firma {
+      font-family: "Great Vibes", "Brush Script MT", cursive;
+      transform: rotate(-4deg);
+      text-shadow: 0 0 18px rgba(45, 212, 191, .35);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .quote-anim { transition: none; }
+    }
+  </style>
+</head>
+
+<body class="h-full font-sans text-slate-200 antialiased">
+  <main class="min-h-full flex flex-col items-center justify-center px-5 pt-10 pb-24 sm:px-8 sm:pb-10">
+
+    <!-- Encabezado -->
+    <header class="w-full max-w-2xl mb-8 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="inline-block h-2.5 w-2.5 rounded-full bg-teal-400 shadow-[0_0_12px_rgba(45,212,191,.8)]"></span>
+        <h1 class="text-sm font-semibold tracking-[0.2em] uppercase text-teal-300/90">Reflexiones diarias</h1>
+      </div>
+      <p id="fecha" class="text-xs sm:text-sm text-slate-400 capitalize"></p>
+    </header>
+
+    <!-- Tarjeta principal -->
+    <section
+      class="w-full max-w-2xl rounded-3xl border border-white/5 bg-white/[0.03] backdrop-blur-xl p-7 sm:p-12 shadow-2xl shadow-black/40"
+      aria-live="polite"
+    >
+      <svg class="h-8 w-8 sm:h-10 sm:w-10 text-teal-400/70 mb-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M9.6 6C6.5 7.3 4.5 10 4.5 13.4V18h5.8v-5.8H7.4c0-2 1.1-3.6 3-4.5L9.6 6Zm9 0c-3.1 1.3-5.1 4-5.1 7.4V18h5.8v-5.8h-2.9c0-2 1.1-3.6 3-4.5L18.6 6Z"/>
+      </svg>
+
+      <blockquote id="frase"
+        class="quote-anim fade-in font-serif text-2xl leading-snug sm:text-4xl sm:leading-tight text-slate-50 min-h-[7rem] sm:min-h-[9rem]">
+        Tocá el botón para recibir tu reflexión del día.
+      </blockquote>
+
+      <div class="mt-10 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4">
+        <p class="text-xs text-slate-500">
+          <span id="contador">0</span> reflexiones hoy
+        </p>
+
+        <div class="flex gap-3">
+          <button id="btnCopiar" type="button"
+            class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 rounded-full border border-white/10 px-5 py-3 text-sm font-medium text-slate-300 hover:text-teal-200 hover:border-teal-400/40 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/60"
+            aria-label="Copiar frase">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>
+            </svg>
+            <span id="txtCopiar">Copiar</span>
+          </button>
+
+          <button id="btnNueva" type="button"
+            class="glow flex-[2] sm:flex-none inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-teal-400 to-emerald-400 px-6 py-3 text-sm font-semibold text-slate-900 transition active:scale-[0.97] focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-200">
+            <svg id="iconoNueva" class="h-4 w-4 transition-transform duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+              <path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/>
+            </svg>
+            Nueva reflexión
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="mt-8 text-xs text-slate-600 text-center">
+      Atajo: presioná <kbd class="rounded border border-white/10 px-1.5 py-0.5 text-slate-400">Espacio</kbd> para una nueva frase
+    </footer>
+  </main>
+
+  <!-- Firma del creador -->
+  <p class="firma fixed bottom-3 right-5 sm:bottom-5 sm:right-8 select-none pointer-events-none text-2xl sm:text-3xl text-teal-300/80">
+    By Diego Ferreyra
+  </p>
+
+  <script>
+    const frases = [
+      "No hace falta ver toda la escalera; alcanza con subir el próximo escalón.",
+      "Lo que hacés todos los días pesa más que lo que hacés de vez en cuando.",
+      "La calma también es una forma de avanzar.",
+      "Un pequeño progreso sigue siendo progreso.",
+      "Hoy no tenés que tenerlo todo resuelto; solo dar el paso que te toca.",
+      "Lo que cuidás, crece. Elegí con atención dónde ponés tu energía.",
+      "Equivocarte es parte de aprender, no lo contrario.",
+      "No compares tu capítulo uno con el capítulo veinte de otra persona.",
+      "Descansar no es rendirse: es prepararse para seguir.",
+      "La constancia le gana al talento cuando el talento no es constante.",
+      "Agradecé lo que hoy funciona, aunque sea poco.",
+      "Las ideas valen cuando se convierten en acciones.",
+      "Sé amable con vos: estás haciendo lo mejor que podés con lo que tenés.",
+      "Cada día trae una oportunidad nueva de empezar distinto.",
+      "Lo difícil de hoy puede ser la fortaleza de mañana.",
+      "Hacé espacio para lo importante antes de que lo urgente lo ocupe todo.",
+      "No necesitás motivación para empezar; empezar te da motivación.",
+      "Escuchar con atención es uno de los regalos más generosos.",
+      "Avanzar despacio no es lo mismo que estar quieto.",
+      "Lo simple, bien hecho, suele ser suficiente.",
+      "Tus límites también merecen respeto, empezando por el tuyo.",
+      "Una buena pregunta abre más caminos que mil respuestas apuradas.",
+      "La curiosidad es la puerta de entrada a casi todo lo que vale la pena.",
+      "Hoy podés elegir tu actitud, aunque no elijas las circunstancias.",
+      "Celebrá lo que lograste antes de correr hacia lo que falta.",
+      "Lo perfecto puede esperar; lo bueno puede empezar ya.",
+      "Rodeate de personas que te recuerden quién sos cuando lo olvides.",
+      "Cada vez que lo intentás de nuevo, ya no empezás desde cero: empezás desde la experiencia.",
+      "Mirá hacia atrás solo para ver cuánto camino recorriste.",
+      "Un minuto de pausa puede cambiar el rumbo de todo el día."
+    ];
+
+    const $frase = document.getElementById("frase");
+    const $btnNueva = document.getElementById("btnNueva");
+    const $btnCopiar = document.getElementById("btnCopiar");
+    const $txtCopiar = document.getElementById("txtCopiar");
+    const $contador = document.getElementById("contador");
+    const $icono = document.getElementById("iconoNueva");
+
+    // Fecha en español
+    document.getElementById("fecha").textContent = new Date().toLocaleDateString("es-AR", {
+      weekday: "long", day: "numeric", month: "long"
+    });
+
+    // "Bolsa" mezclada: recorre todas las frases sin repetir hasta agotarlas
+    let bolsa = [];
+    let ultima = null;
+    let contador = 0;
+    let giro = 0;
+
+    function mezclar(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function siguienteFrase() {
+      if (bolsa.length === 0) {
+        bolsa = mezclar(frases);
+        // Evita que la primera de la nueva ronda repita la última mostrada
+        if (bolsa[bolsa.length - 1] === ultima) bolsa.unshift(bolsa.pop());
+      }
+      ultima = bolsa.pop();
+      return ultima;
+    }
+
+    function mostrarNueva() {
+      giro += 360;
+      $icono.style.transform = `rotate(${giro}deg)`;
+      $frase.classList.replace("fade-in", "fade-out");
+
+      setTimeout(() => {
+        $frase.textContent = siguienteFrase();
+        $frase.classList.replace("fade-out", "fade-in");
+        contador++;
+        $contador.textContent = contador;
+      }, 300);
+    }
+
+    async function copiar() {
+      if (!ultima) return;
+      try {
+        await navigator.clipboard.writeText(ultima);
+        $txtCopiar.textContent = "¡Copiada!";
+      } catch {
+        $txtCopiar.textContent = "No se pudo copiar";
+      }
+      setTimeout(() => ($txtCopiar.textContent = "Copiar"), 1600);
+    }
+
+    $btnNueva.addEventListener("click", mostrarNueva);
+    $btnCopiar.addEventListener("click", copiar);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Space" && e.target === document.body) {
+        e.preventDefault();
+        mostrarNueva();
+      }
+    });
+  </script>
+</body>
+</html>
